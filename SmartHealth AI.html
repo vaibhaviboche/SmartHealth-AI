@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartHealth AI</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:'Roboto',sans-serif;overflow-x:hidden;}
+    body{background:linear-gradient(120deg,#dbeafe,#e0f2fe,#d1fae5);background-size:600% 600%;animation:gradientBG 20s ease infinite;}
+    @keyframes gradientBG{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+    .slide{width:100%;height:100vh;display:none;justify-content:center;align-items:center;padding:20px;transition:all 0.8s ease;animation:fadeIn 1s;}
+    .slide.active{display:flex;}
+    @keyframes fadeIn{0%{opacity:0;transform:translateY(20px);}100%{opacity:1;transform:translateY(0);}}
+    .gradient-card{background:#ffffffcc;padding:30px;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,0.15);max-width:700px;width:100%;color:#111;transition:all 0.4s;}
+    .gradient-card h1,h2{margin-bottom:15px;}
+    .gradient-card input, .gradient-card select, .gradient-card textarea{margin:5px 0;padding:12px;border-radius:10px;border:1px solid #ccc;width:100%;font-size:14px;}
+    .gradient-card input:focus, .gradient-card select:focus, .gradient-card textarea:focus{outline:none;box-shadow:0 0 10px rgba(59,130,246,0.6);}
+    button{margin:10px;padding:12px 30px;border:none;border-radius:10px;background:linear-gradient(90deg,#3b82f6,#22c55e);color:white;font-weight:700;cursor:pointer;transition:0.3s;}
+    button:hover{background:linear-gradient(90deg,#2563eb,#16a34a);transform:translateY(-2px);}
+    .btn-group{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:20px;}
+    #circularGauge,#barGauge{max-width:350px;margin:20px auto;background:transparent}
+    .badge{padding:10px 25px;border-radius:30px;color:white;font-weight:700;display:inline-block;margin:10px 0;font-size:15px;transition:all 0.4s;}
+    .low{background:linear-gradient(90deg,#16a34a,#22c55e);}
+    .med{background:linear-gradient(90deg,#facc15,#fbbf24);color:#111;}
+    .high{background:linear-gradient(90deg,#dc2626,#ef4444);}
+    ul{list-style-type:disc;text-align:left;margin-left:20px;font-size:14px;opacity:0;transition:opacity 0.8s ease-in;}
+    ul.show{opacity:1;}
+    label{cursor:pointer;margin-right:12px;display:inline-block;margin-bottom:5px;}
+    .step-indicator{font-size:14px;color:#111;margin-bottom:10px;}
+    .grid-two{display:grid;grid-template-columns:1fr 1fr;gap:15px;}
+    @media (max-width:720px){.grid-two{grid-template-columns:1fr}}
+    .language-select{position:absolute;top:10px;right:10px;}
+    .voice-toggle{position:absolute;top:50px;right:10px;}
+    .normal-range{display:block;color:#555;font-size:12px;margin-top:2px;}
+  </style>
+</head>
+<body>
+
+  <!-- Language & Voice -->
+  <select id="languageSelect" class="language-select">
+    <option value="en">English</option>
+    <option value="hi">हिंदी</option>
+    <option value="mr">मराठी</option>
+  </select>
+  <button id="voiceToggle" class="voice-toggle">Voice On</button>
+
+  <!-- Slide 1: Welcome -->
+  <div class="slide active" id="slide1">
+    <div class="gradient-card" style="text-align:center;">
+      <h1 id="welcomeText">💚 SmartHealth AI 💚</h1>
+      <p id="welcomeSubText">AI-powered personal health assistant</p>
+      <button id="startBtn">Start Now</button>
+    </div>
+  </div>
+
+  <!-- Slide 2: Personal Details -->
+  <div class="slide" id="slide2">
+    <div class="gradient-card">
+      <div class="step-indicator">Step 1 of 4</div>
+      <h2>Personal Details</h2>
+      <div class="grid-two">
+        <input type="text" id="pName" placeholder="Full Name">
+        <input type="number" id="pAge" placeholder="Age">
+        <select id="pGender"><option value="" disabled selected>Gender</option><option>Male</option><option>Female</option><option>Other</option></select>
+        <input type="number" id="pHeight" placeholder="Height (cm)">
+        <input type="number" id="pWeight" placeholder="Weight (kg)">
+        <input type="text" id="pBlood" placeholder="Blood Group">
+        <select id="pLifestyle"><option value="" disabled selected>Lifestyle</option><option>Sedentary</option><option>Active</option><option>Very Active</option></select>
+        <input type="number" id="pStress" placeholder="Stress Level (1-10)" min="0" max="10">
+        <select id="pSmoking"><option value="" disabled selected>Smoking</option><option value="None">None</option><option value="Occasional">Occasional</option><option value="Regular">Regular</option></select>
+        <select id="pAlcohol"><option value="" disabled selected>Alcohol</option><option value="None">None</option><option value="Occasional">Occasional</option><option value="Regular">Regular</option></select>
+        <select id="pFamilyHistory"><option value="" disabled selected>Family History</option><option>None</option><option>Diabetes</option><option>Heart Disease</option><option>Hypertension</option><option>Kidney Disease</option></select>
+      </div>
+      <textarea id="pHistory" placeholder="Medical History" style="margin-top:15px;min-height:80px;"></textarea>
+      <div class="btn-group">
+        <button id="back1Btn">Back</button>
+        <button id="next1Btn">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 3: Disease & Symptoms -->
+  <div class="slide" id="slide3">
+    <div class="gradient-card">
+      <div class="step-indicator">Step 2 of 4</div>
+      <h2 id="diseaseText">Select Disease & Symptoms</h2>
+      <select id="diseaseSelect">
+        <option value="" disabled selected>Select Disease</option>
+        <option value="diabetes">Diabetes</option>
+        <option value="heart">Heart Disease</option>
+        <option value="hypertension">Hypertension</option>
+        <option value="asthma">Asthma</option>
+        <option value="obesity">Obesity</option>
+        <option value="kidney">Kidney Disease</option>
+        <option value="other">Other</option>
+      </select>
+      <div id="diseaseFields" style="margin-top:20px;"></div>
+      <div class="btn-group">
+        <button id="back2Btn">Back</button>
+        <button id="predictBtn">Calculate Risk</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 4: Risk Assessment -->
+  <div class="slide" id="slide4">
+    <div class="gradient-card" style="text-align:center;">
+      <div class="step-indicator">Step 3 of 4</div>
+      <h2 id="riskText">Risk Assessment</h2>
+      <div style="font-size:16px;margin-bottom:10px;">Risk Score: <span id="riskScore">0%</span></div>
+      <div class="badge" id="riskBadge">-</div>
+      <canvas id="circularGauge" width="300" height="300"></canvas>
+      <canvas id="barGauge" width="300" height="80"></canvas>
+      <h3 id="recText">Recommendations:</h3>
+      <ul id="recommendations"></ul>
+      <h3 id="symText">Possible Diseases Based on Symptoms:</h3>
+      <ul id="symptomDiseases"></ul>
+      <div class="btn-group">
+        <button id="back3Btn">Back</button>
+        <button id="next3Btn">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 5: Summary & Export -->
+  <div class="slide" id="slide5">
+    <div class="gradient-card" style="text-align:left;">
+      <div class="step-indicator">Step 4 of 4</div>
+      <h2 id="summaryText">Summary & Export</h2>
+      <div id="summaryContent" style="margin-top:10px;"></div>
+      <div class="btn-group">
+        <button id="back4Btn">Back</button>
+        <button id="exportPdfBtn">Export PDF</button>
+        <button id="exportCsvBtn">Export CSV</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // -------------------- Languages --------------------
+    let currentLang='en';
+    const LANGUAGES={en:{welcome:'Welcome to SmartHealth AI. Click Start Now to begin your health assessment.',warningDisease:'Please select a disease to assess.'},hi:{welcome:'स्मार्टहेल्थ एआई में आपका स्वागत है। अपनी स्वास्थ्य जाँच शुरू करने के लिए "स्टार्ट नाउ" पर क्लिक करें।',warningDisease:'कृपया मूल्यांकन के लिए रोग चुनें।'},mr:{welcome:'स्मार्टहेल्थ एआय मध्ये आपले स्वागत आहे. आरोग्य तपासणी सुरू करण्यासाठी "स्टार्ट नाउ" वर क्लिक करा.',warningDisease:'कृपया मूल्यांकनासाठी आजार निवडा.'}};
+    const languageSelect=document.getElementById('languageSelect');
+    languageSelect.addEventListener('change',e=>currentLang=e.target.value);
+
+    // -------------------- Voice --------------------
+    let voiceEnabled=true;
+    document.getElementById('voiceToggle').addEventListener('click',()=>{
+      voiceEnabled=!voiceEnabled;
+      document.getElementById('voiceToggle').innerText=voiceEnabled?'Voice On':'Voice Off';
+    });
+    function speak(text){if(voiceEnabled){const utter=new SpeechSynthesisUtterance(text); utter.lang=currentLang==='en'?'en-US':currentLang==='hi'?'hi-IN':'mr-IN'; speechSynthesis.speak(utter);}}
+    function speakArray(arr){arr.forEach(t=>speak(t));}
+
+    // -------------------- Welcome Voice --------------------
+    function welcomeVoice(){speak(LANGUAGES[currentLang].welcome);}
+    document.addEventListener('DOMContentLoaded',()=>{showSlide(1); welcomeVoice();});
+
+    // -------------------- Slide Navigation --------------------
+    function showSlide(n){
+      document.querySelectorAll('.slide').forEach(s=>s.classList.remove('active'));
+      document.getElementById('slide'+n).classList.add('active');
+      if(n===5) showSummary();
+    }
+    document.getElementById('startBtn').onclick=()=>showSlide(2);
+    document.getElementById('next1Btn').onclick=()=>showSlide(3);
+    document.getElementById('back1Btn').onclick=()=>showSlide(1);
+    document.getElementById('back2Btn').onclick=()=>showSlide(2);
+    document.getElementById('back3Btn').onclick=()=>showSlide(3);
+    document.getElementById('next3Btn').onclick=()=>showSlide(5);
+    document.getElementById('back4Btn').onclick=()=>showSlide(4);
+
+    // -------------------- Disease & Symptoms --------------------
+    const diseaseForms={diabetes:["Fasting Blood Sugar","Post-meal Sugar","BMI"],heart:["Cholesterol","Blood Pressure","Heart Rate"],hypertension:["Systolic BP","Diastolic BP","BMI"],asthma:["Peak Flow","Oxygen Saturation","Respiratory Rate"],obesity:["BMI","Waist Circumference","Activity Level"],kidney:["Creatinine","BUN","GFR"],other:[]};
+    const allSymptoms=["Fatigue","Shortness of Breath","High Fever","Cough","Chest Pain","Frequent Urination","Blurred Vision","Weight Loss","Headache","Dizziness"];
+
+    // Normal Ranges
+    const normalRanges={diabetes:{'Fasting Blood Sugar':{min:70,max:100},'Post-meal Sugar':{min:100,max:140},'BMI':{min:18.5,max:24.9}},heart:{'Cholesterol':{min:125,max:200},'Blood Pressure':{min:80,max:120},'Heart Rate':{min:60,max:100}},hypertension:{'Systolic BP':{min:90,max:120},'Diastolic BP':{min:60,max:80},'BMI':{min:18.5,max:24.9}},asthma:{'Peak Flow':{min:400,max:600},'Oxygen Saturation':{min:95,max:100},'Respiratory Rate':{min:12,max:20}},obesity:{'BMI':{min:18.5,max:24.9},'Waist Circumference':{min:70,max:90},'Activity Level':{min:1,max:10}},kidney:{'Creatinine':{min:0.6,max:1.3},'BUN':{min:7,max:20},'GFR':{min:90,max:120}}};
+
+    const diseaseSelectEl=document.getElementById('diseaseSelect');
+    diseaseSelectEl.addEventListener('change',()=>{
+      const disease=diseaseSelectEl.value, container=document.getElementById('diseaseFields');
+      while(container.firstChild) container.removeChild(container.firstChild);
+      (diseaseForms[disease]||[]).forEach(f=>{
+        const wrapper=document.createElement('div'); wrapper.style.marginBottom='10px';
+        const inp=document.createElement('input'); inp.placeholder=f; inp.type='number'; inp.id='num__'+f.replace(/\s+/g,'__');
+        const range=normalRanges[disease]?.[f];
+        if(range){
+          const label=document.createElement('span'); label.className='normal-range';
+          label.textContent=`Normal: ${range.min} - ${range.max}`;
+          wrapper.appendChild(inp); wrapper.appendChild(label);
+        } else wrapper.appendChild(inp);
+        container.appendChild(wrapper);
+      });
+      attachNormalRangeCheck();
+      const sh=document.createElement('h3'); sh.textContent='Symptoms'; container.appendChild(sh);
+      allSymptoms.forEach(s=>{
+        const label=document.createElement('label');
+        const cb=document.createElement('input'); cb.type='checkbox'; cb.id='sym__'+s.replace(/\s+/g,'__');
+        label.appendChild(cb); label.appendChild(document.createTextNode(' '+s));
+        container.appendChild(label);
+      });
+    });
+
+    // Highlight inputs
+    function attachNormalRangeCheck(){
+      Object.values(diseaseForms).flat().forEach(f=>{
+        const id='num__'+f.replace(/\s+/g,'__');
+        const inp=document.getElementById(id); if(!inp) return;
+        inp.addEventListener('input',()=>{
+          const disease=diseaseSelectEl.value;
+          const range=normalRanges[disease]?.[f];
+          if(range){
+            const val=parseFloat(inp.value);
+            if(isNaN(val)){inp.style.background='white';}
+            else if(val<range.min || val>range.max){inp.style.background='#f87171';}
+            else {inp.style.background='#4ade80';}
+          }
+        });
+      });
+    }
+
+    // -------------------- Utilities --------------------
+    function parseNonNegFloat(v){
+      const n=parseFloat(v);
+      return (!isNaN(n) && isFinite(n) && n>=0) ? n : 5; // baseline
+    }
+    function getMetricsValues(){
+      const disease=document.getElementById('diseaseSelect').value;
+      const fields=diseaseForms[disease]||[];
+      const data={};
+      fields.forEach(f=>{
+        const id='num__'+f.replace(/\s+/g,'__');
+        data[f]=parseNonNegFloat(document.getElementById(id)?.value);
+      });
+      const smokingVal=document.getElementById('pSmoking').value||'None';
+      const alcoholVal=document.getElementById('pAlcohol').value||'None';
+      data.Smoking=(smokingVal==='None')?0:(smokingVal==='Occasional'?5:10);
+      data.Alcohol=(alcoholVal==='None')?0:(alcoholVal==='Occasional'?5:10);
+      data.Stress=parseNonNegFloat(document.getElementById('pStress')?.value);
+      return data;
+    }
+    function getSymptomsValues(){return allSymptoms.filter(s=>document.getElementById('sym__'+s.replace(/\s+/g,'__'))?.checked);}
+    function calculateRisk(){const metrics=getMetricsValues(); const symptoms=getSymptomsValues(); let score=0; for(const k in metrics){score+=metrics[k];} score+=symptoms.length*5; return Math.min(Math.round((score/200)*100),100);}
+    function recommendationsForDisease(disease){const recs={diabetes:["Maintain healthy diet","Exercise regularly","Monitor sugar"],heart:["Regular checkups","Low-fat diet","Avoid smoking"],hypertension:["Reduce salt","Monitor BP","Stress control"],asthma:["Avoid allergens","Regular inhalers","Monitor breathing"],obesity:["Balanced diet","Exercise","Lifestyle changes"],kidney:["Stay hydrated","Avoid excess salt","Regular tests"]}; return recs[disease]||["General wellness tips"];}
+    function diseasesForSymptoms(symptoms){const map={Fatigue:["Diabetes","Anemia"],"Shortness of Breath":["Asthma","Heart Disease"],"High Fever":["Infection","Typhoid"],Cough:["Asthma","Flu"],"Chest Pain":["Heart Disease","Anxiety"],"Frequent Urination":["Diabetes","Kidney"],"Blurred Vision":["Diabetes","Hypertension"],"Weight Loss":["Diabetes","Thyroid"],Headache:["Hypertension","Migraine"],Dizziness:["Anemia","Heart Disease"]}; let result=[]; symptoms.forEach(s=>{if(map[s]) result=[...new Set([...result,...map[s]])];}); return result;}
+
+    // -------------------- Risk Calculation --------------------
+    document.getElementById('predictBtn').onclick=()=>{
+      const disease=document.getElementById('diseaseSelect').value;
+      if(!disease){alert(LANGUAGES[currentLang].warningDisease);return;}
+      const risk=calculateRisk();
+      document.getElementById('riskScore').textContent=risk+"%";
+      const badge=document.getElementById('riskBadge');
+      badge.className='badge';
+      if(risk<40){badge.textContent="Low Risk"; badge.classList.add('low');}
+      else if(risk<70){badge.textContent="Medium Risk"; badge.classList.add('med');}
+      else {badge.textContent="High Risk"; badge.classList.add('high');}
+      const circularCtx=document.getElementById('circularGauge').getContext('2d');
+      if(window.circularChart) window.circularChart.destroy();
+      window.circularChart=new Chart(circularCtx,{type:'doughnut',data:{labels:['Risk','Remaining'],datasets:[{data:[risk,100-risk],backgroundColor:['#ef4444','#e5e7eb'],borderWidth:1}]},options:{plugins:{legend:{display:false}},cutout:'70%'}});
+      const barCtx=document.getElementById('barGauge').getContext('2d');
+      if(window.barChart) window.barChart.destroy();
+      window.barChart=new Chart(barCtx,{type:'bar',data:{labels:['Risk'],datasets:[{data:[risk],backgroundColor:risk<40?'#22c55e':risk<70?'#facc15':'#ef4444'}]},options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{min:0,max:100}}}});
+      const recs=recommendationsForDisease(disease);
+      const recList=document.getElementById('recommendations');
+      recList.innerHTML=''; recs.forEach(r=>{const li=document.createElement('li'); li.textContent=r; recList.appendChild(li);});
+      recList.classList.add('show');
+      const syms=getSymptomsValues();
+      const symsList=diseasesForSymptoms(syms);
+      const symList=document.getElementById('symptomDiseases');
+      symList.innerHTML=''; symsList.forEach(s=>{const li=document.createElement('li'); li.textContent=s; symList.appendChild(li);});
+      symList.classList.add('show');
+      speak("Your risk score is "+risk+" percent.");
+      showSlide(4);
+    };
+
+    // -------------------- Summary --------------------
+    function showSummary(){
+      const name=document.getElementById('pName').value;
+      const age=document.getElementById('pAge').value;
+      const gender=document.getElementById('pGender').value;
+      const disease=document.getElementById('diseaseSelect').value;
+      const risk=document.getElementById('riskScore').textContent;
+      const recs=[...document.getElementById('recommendations').querySelectorAll('li')].map(li=>li.textContent);
+      const syms=[...document.getElementById('symptomDiseases').querySelectorAll('li')].map(li=>li.textContent);
+      document.getElementById('summaryContent').innerHTML=`<strong>Name:</strong> ${name}<br><strong>Age:</strong> ${age}<br><strong>Gender:</strong> ${gender}<br><strong>Disease:</strong> ${disease}<br><strong>Risk:</strong> ${risk}<br><br><strong>Recommendations:</strong><ul>${recs.map(r=>'<li>'+r+'</li>').join('')}</ul><strong>Possible Diseases from Symptoms:</strong><ul>${syms.map(s=>'<li>'+s+'</li>').join('')}</ul>`;
+    }
+
+    // -------------------- PDF Export --------------------
+    document.getElementById('exportPdfBtn').onclick=()=>{
+      const {jsPDF}=window.jspdf;
+      const doc=new jsPDF();
+      doc.setFontSize(16);
+      doc.text("SmartHealth AI Report",20,20);
+      doc.setFontSize(12);
+      const summaryText=document.getElementById('summaryContent').innerText;
+      const lines=doc.splitTextToSize(summaryText,180);
+      doc.text(lines,20,30);
+      doc.save("SmartHealth_Report.pdf");
+    };
+
+    // -------------------- CSV Export --------------------
+    document.getElementById('exportCsvBtn').onclick=()=>{
+      let csv="SmartHealth AI Report\n";
+      const content=document.getElementById('summaryContent');
+      const text=content.innerText.split("\n");
+      text.forEach(line=>{
+        csv+=`"${line.replace(/"/g,'""')}"\n`;
+      });
+      const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+      const link=document.createElement("a");
+      link.href=URL.createObjectURL(blob);
+      link.download="SmartHealth_Report.csv";
+      link.click();
+    };
+  </script>
+</body>
+</html>
