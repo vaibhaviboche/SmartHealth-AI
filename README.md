@@ -53,27 +53,3 @@ Risk Assessment
 Recommendations
        ↓
 PDF / CSV Report
-
----
-
-
-## ⚠️ Disclaimer
-
-This project is created for educational purposes only. It is not a medical diagnosis or treatment tool. The results should not be used as a substitute for professional medical advice.
-
----
-
-## 🎯 Purpose
-
-The project was developed to practice frontend development, JavaScript functionality, data visualization, browser APIs, and report generation.
-
----
-
-## 👩‍💻 Author
-
-**Vaibhavi Boche**
-
-BCA Student | Python | AI | Data Analysis | Frontend Development
-
-GitHub:  
-https://github.com/vaibhaviboche
